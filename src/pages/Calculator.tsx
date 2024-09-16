@@ -26,7 +26,8 @@ export function Calculator() {
     setIsLoading(true);
     setError(null);
     const userId = "testuser123"; // In a real app, this should be dynamically generated or retrieved from user authentication
-    const API_URL = "ec2-44-192-45-247.compute-1.amazonaws.com/calculate";
+    const API_URL =
+      "https://ec2-44-192-45-247.compute-1.amazonaws.com/calculate";
 
     const data = {
       electricity: electricity[0],
