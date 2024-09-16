@@ -26,6 +26,7 @@ export function Calculator() {
     setIsLoading(true);
     setError(null);
     const userId = "testuser123"; // In a real app, this should be dynamically generated or retrieved from user authentication
+    const API_URL = "ec2-44-192-45-247.compute-1.amazonaws.com/calculate";
 
     const data = {
       electricity: electricity[0],
@@ -35,7 +36,7 @@ export function Calculator() {
     };
 
     try {
-      const response = await fetch("http://44.192.45.247:3000/calculate", {
+      const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
