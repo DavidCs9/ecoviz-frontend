@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LeafIcon } from "lucide-react";
 import {
   Card,
@@ -13,12 +14,11 @@ import { Slider } from "../components/ui/slider";
 import { Button } from "../components/ui/button";
 
 export function Calculator() {
+  const navigate = useNavigate();
   const [electricity, setElectricity] = useState<number[]>([500]);
   const [transportation, setTransportation] = useState<number[]>([50]);
   const [diet, setDiet] = useState<number[]>([75]);
   const [otherFactors, setOtherFactors] = useState<number[]>([25]);
-  const [result, setResult] = useState<number | null>(null);
-  const [calculationId, setCalculationId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,8 +49,13 @@ export function Calculator() {
       }
 
       const result = await response.json();
-      setResult(result.carbonFootprint);
-      setCalculationId(result.calculationId);
+      navigate("/results", {
+        state: {
+          carbonFootprint: result.carbonFootprint,
+          calculationData: data,
+          aiAnalysis: result.aiAnalysis,
+        },
+      });
     } catch (error) {
       console.error("Error:", error);
       setError("Failed to calculate carbon footprint. Please try again.");
@@ -158,16 +163,6 @@ export function Calculator() {
             {isLoading ? "Calculating..." : "Calculate"}
           </Button>
           {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-          {result !== null && (
-            <div className="mt-4 text-center">
-              <p className="text-lg font-semibold text-green-800">
-                Your carbon footprint: {result.toFixed(2)} kg CO2e
-              </p>
-              <p className="text-sm text-green-600">
-                Calculation ID: {calculationId}
-              </p>
-            </div>
-          )}
         </CardFooter>
       </Card>
     </div>
