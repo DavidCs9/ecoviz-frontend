@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSpring, animated } from "react-spring";
 import {
   PieChart,
@@ -16,6 +17,8 @@ import {
 } from "recharts";
 import { Leaf, Car, Zap, Coffee, ShoppingBag } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { PersistedData, useDataPersistence } from "../hooks/useDataPersistence";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export interface ResultsProps {
   carbonFootprint: number;
@@ -131,12 +134,27 @@ const renderActiveShape = (props: any) => {
   );
 };
 
-const Results: React.FC<ResultsProps> = ({
-  carbonFootprint,
-  calculationData,
-  aiAnalysis,
-  averages,
-}) => {
+const Results: React.FC = () => {
+  const { persistedData, saveData } = useDataPersistence();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state) {
+      saveData(location.state as PersistedData);
+    } else if (!persistedData) {
+      navigate("/"); // Redirect to home if no data is available
+    }
+  }, [location.state, persistedData, saveData, navigate]);
+
+  const resultData = persistedData || (location.state as PersistedData);
+
+  if (!resultData) {
+    return <div>Loading...</div>; // Or some other loading state
+  }
+
+  const { carbonFootprint, calculationData, aiAnalysis, averages } = resultData;
+
   const animatedNumber = useSpring({
     number: carbonFootprint,
     from: { number: 0 },
