@@ -1,18 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
 import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from "recharts";
-import { Leaf, Car, Zap, Coffee, AlertCircle } from "lucide-react";
+import { Leaf, Car, Zap, Coffee, ShoppingBag } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 export interface ResultsProps {
   carbonFootprint: number;
   calculationData: {
-    electricity: number;
-    transportation: number;
-    diet: number;
-    otherFactors: number;
+    housing: {
+      energy: {
+        electricity: number;
+        naturalGas: number;
+        heatingOil: number;
+      };
+    };
+    transportation: {
+      car: {
+        milesDriven: number;
+        fuelEfficiency: number;
+      };
+      publicTransit: {
+        busMiles: number;
+        trainMiles: number;
+      };
+      flights: {
+        shortHaul: number;
+        longHaul: number;
+      };
+    };
+    food: {
+      dietType: string;
+      wasteLevel: string;
+    };
+    consumption: {
+      shoppingHabits: string;
+      recyclingHabits: string;
+    };
   };
   aiAnalysis: string;
 }
@@ -100,41 +125,65 @@ const Results: React.FC<ResultsProps> = ({
     number: carbonFootprint,
     from: { number: 0 },
   });
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
 
+  const calculateSectorEmissions = () => {
+    console.log(calculationData);
+    const housing =
+      calculationData.housing.energy.electricity * 0.42 +
+      calculationData.housing.energy.naturalGas * 5.3 +
+      calculationData.housing.energy.heatingOil * 10.15;
+
+    const transportation =
+      (calculationData.transportation.car.milesDriven /
+        calculationData.transportation.car.fuelEfficiency) *
+        8.89 +
+      calculationData.transportation.publicTransit.busMiles * 0.059 +
+      calculationData.transportation.publicTransit.trainMiles * 0.041 +
+      calculationData.transportation.flights.shortHaul * 1100 +
+      calculationData.transportation.flights.longHaul * 4400;
+
+    const foodEmissions = carbonFootprint * 0.25; // Assuming food is roughly 25% of total emissions
+    const consumptionEmissions = carbonFootprint * 0.15; // Assuming consumption is roughly 15% of total emissions
+
+    return { housing, transportation, foodEmissions, consumptionEmissions };
+  };
+
+  const sectorEmissions = calculateSectorEmissions();
+
   const data = [
     {
-      name: "Electricity",
-      value: calculationData.electricity,
+      name: "Housing",
+      value: sectorEmissions.housing,
       color: "#4CAF50",
       icon: Zap,
     },
     {
       name: "Transportation",
-      value: calculationData.transportation,
+      value: sectorEmissions.transportation,
       color: "#2196F3",
       icon: Car,
     },
     {
-      name: "Diet",
-      value: calculationData.diet,
+      name: "Food",
+      value: sectorEmissions.foodEmissions,
       color: "#FFC107",
       icon: Coffee,
     },
     {
-      name: "Other",
-      value: calculationData.otherFactors,
+      name: "Consumption",
+      value: sectorEmissions.consumptionEmissions,
       color: "#9C27B0",
-      icon: Leaf,
+      icon: ShoppingBag,
     },
   ];
 
   return (
-    <div className="min-h-screen w-full  p-6">
+    <div className="min-h-screen w-full p-6">
       <div className="max-w-4xl mx-auto bg-gradient-to-br from-green-100 to-blue-100 p-6 rounded-lg shadow-lg overflow-hidden text-gray-600">
         <div className="p-8">
           <h1 className="text-4xl font-bold text-center mb-8 text-green-800">
@@ -146,7 +195,7 @@ const Results: React.FC<ResultsProps> = ({
             <animated.span className="text-6xl font-bold text-green-700">
               {animatedNumber.number.to((n) => n.toFixed(2))}
             </animated.span>
-            <span className="text-2xl ml-2">kg CO2e</span>
+            <span className="text-2xl ml-2">kg CO2e / year</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -187,7 +236,7 @@ const Results: React.FC<ResultsProps> = ({
                       style={{ color: item.color }}
                     />
                     <span className="text-lg">
-                      {item.name}: {item.value.toFixed(1)}
+                      {item.name}: {item.value.toFixed(1)} kg CO2e
                     </span>
                   </li>
                 ))}
@@ -196,8 +245,7 @@ const Results: React.FC<ResultsProps> = ({
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-green-700 flex items-center">
-              <AlertCircle className="w-6 h-6 mr-2 text-green-600" />
+            <h2 className="text-2xl font-semibold mb-4 text-green-700">
               AI Recommendations
             </h2>
             <div className="bg-green-50 p-6 rounded-lg shadow-inner">

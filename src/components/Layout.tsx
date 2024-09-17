@@ -1,5 +1,5 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Toaster } from "./ui/toaster";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -34,6 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </nav> */}
       <main>{children}</main>
+      <Toaster />
     </div>
   );
 };

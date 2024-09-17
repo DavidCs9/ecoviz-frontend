@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import { Calculator } from "./pages/Calculator";
-import Results from "./pages/Results";
+import Results, { ResultsProps } from "./pages/Results";
 
 const queryClient = new QueryClient();
 
@@ -30,16 +30,6 @@ const ResultsWrapper = () => {
 };
 
 // Define the ResultsProps interface
-interface ResultsProps {
-  carbonFootprint: number;
-  calculationData: {
-    electricity: number;
-    transportation: number;
-    diet: number;
-    otherFactors: number;
-  };
-  aiAnalysis: string;
-}
 
 function App() {
   return (
