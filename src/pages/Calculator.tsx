@@ -62,6 +62,11 @@ export function Calculator() {
     recyclingHabits: "",
   });
 
+  // Add this new function to clear localStorage
+  const clearStoredResults = () => {
+    localStorage.removeItem("resultsData");
+  };
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -80,6 +85,7 @@ export function Calculator() {
   };
 
   useEffect(() => {
+    clearStoredResults();
     let progressInterval: NodeJS.Timeout | undefined;
     let factInterval: NodeJS.Timeout | undefined;
 
@@ -114,6 +120,7 @@ export function Calculator() {
   }, [isLoading]);
 
   const handleSubmit = async () => {
+    clearStoredResults(); // Clear localStorage before starting new calculation
     setIsLoading(true);
     setLoadingProgress(0);
     const API_URL = "https://0123543.xyz/calculate";
