@@ -2,7 +2,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
-import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Sector,
+  BarChart,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Bar,
+} from "recharts";
 import { Leaf, Car, Zap, Coffee, ShoppingBag } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
@@ -40,6 +51,10 @@ export interface ResultsProps {
     };
   };
   aiAnalysis: string;
+  averages: {
+    global: number;
+    us: number;
+  };
 }
 
 const RADIAN = Math.PI / 180;
@@ -120,6 +135,7 @@ const Results: React.FC<ResultsProps> = ({
   carbonFootprint,
   calculationData,
   aiAnalysis,
+  averages,
 }) => {
   const animatedNumber = useSpring({
     number: carbonFootprint,
@@ -132,7 +148,6 @@ const Results: React.FC<ResultsProps> = ({
   };
 
   const calculateSectorEmissions = () => {
-    console.log(calculationData);
     const housing =
       calculationData.housing.energy.electricity * 0.42 +
       calculationData.housing.energy.naturalGas * 5.3 +
@@ -180,6 +195,12 @@ const Results: React.FC<ResultsProps> = ({
       color: "#9C27B0",
       icon: ShoppingBag,
     },
+  ];
+
+  const comparisonData = [
+    { name: "Your Footprint", value: carbonFootprint, fill: "#4CAF50" },
+    { name: "Global Average", value: averages.global, fill: "#2196F3" },
+    { name: "US Average", value: averages.us, fill: "#FFC107" },
   ];
 
   return (
@@ -241,6 +262,35 @@ const Results: React.FC<ResultsProps> = ({
                   </li>
                 ))}
               </ul>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4 text-green-700">
+              Comparison with Averages
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={comparisonData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" />
+              </BarChart>
+            </ResponsiveContainer>
+            <div className="mt-4 text-center">
+              <p className="text-lg">
+                Your carbon footprint is{" "}
+                <strong className="text-green-700">
+                  {((carbonFootprint / averages.global - 1) * 100).toFixed(1)}%
+                </strong>{" "}
+                {carbonFootprint > averages.global ? "higher" : "lower"} than
+                the global average and{" "}
+                <strong className="text-green-700">
+                  {((carbonFootprint / averages.us - 1) * 100).toFixed(1)}%
+                </strong>{" "}
+                {carbonFootprint > averages.us ? "higher" : "lower"} than the US
+                average.
+              </p>
             </div>
           </div>
 
