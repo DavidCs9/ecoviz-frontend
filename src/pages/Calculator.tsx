@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Label } from "../components/ui/label";
 import {
@@ -21,14 +21,29 @@ import {
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
+import { Progress } from "../components/ui/progress";
 
 const steps = ["Housing", "Transportation", "Food", "Consumption"];
+
+const loadingFacts = [
+  "Did you know? A single tree can absorb up to 48 pounds of CO2 per year.",
+  "Fun fact: The average person generates about 4.5 tons of CO2 per year.",
+  "Tip: Reducing your meat consumption can significantly lower your carbon footprint.",
+  "Interesting: Renewable energy sources made up 26% of global electricity generation in 2018.",
+  "Fact: The transportation sector accounts for about 14% of global greenhouse gas emissions.",
+  "Did you know? LED lights use up to 90% less energy than traditional incandescent bulbs.",
+  "Tip: Using public transportation can significantly reduce your carbon footprint.",
+];
 
 export function Calculator() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [currentFact, setCurrentFact] = useState("");
+  const [isFinalizingDetails, setIsFinalizingDetails] =
+    useState<boolean>(false);
   const [formData, setFormData] = useState({
     housingType: "",
     householdSize: "",
@@ -64,8 +79,43 @@ export function Calculator() {
     setCurrentStep((prevStep) => prevStep - 1);
   };
 
+  useEffect(() => {
+    let progressInterval: NodeJS.Timeout | undefined;
+    let factInterval: NodeJS.Timeout | undefined;
+
+    if (isLoading) {
+      setCurrentFact(
+        loadingFacts[Math.floor(Math.random() * loadingFacts.length)]
+      );
+
+      progressInterval = setInterval(() => {
+        setLoadingProgress((oldProgress) => {
+          if (oldProgress >= 100) {
+            clearInterval(progressInterval);
+            setIsFinalizingDetails(true);
+            return 100;
+          }
+          return oldProgress + 1; // Increases by 1% every 100ms
+        });
+      }, 100);
+
+      // Change fact every 5 seconds
+      factInterval = setInterval(() => {
+        setCurrentFact(
+          loadingFacts[Math.floor(Math.random() * loadingFacts.length)]
+        );
+      }, 5000);
+    }
+
+    return () => {
+      if (progressInterval) clearInterval(progressInterval);
+      if (factInterval) clearInterval(factInterval);
+    };
+  }, [isLoading]);
+
   const handleSubmit = async () => {
     setIsLoading(true);
+    setLoadingProgress(0);
     const API_URL = "https://0123543.xyz/calculate";
 
     try {
@@ -166,6 +216,7 @@ export function Calculator() {
       });
     } finally {
       setIsLoading(false);
+      setLoadingProgress(0);
     }
   };
 
@@ -428,28 +479,53 @@ export function Calculator() {
             Carbon Footprint Calculator
           </CardTitle>
           <CardDescription className="text-green-600">
-            Step {currentStep + 1} of {steps.length}: {steps[currentStep]}
+            {isLoading
+              ? isFinalizingDetails
+                ? "Finalizing details..."
+                : "Calculating your carbon footprint..."
+              : `Step ${currentStep + 1} of ${steps.length}: ${
+                  steps[currentStep]
+                }`}
           </CardDescription>
         </CardHeader>
-        <CardContent>{renderStep()}</CardContent>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4">
+              <Progress value={loadingProgress} className="w-full" />
+              <p className="text-center text-green-700">{currentFact}</p>
+              {isFinalizingDetails && (
+                <p className="text-center text-yellow-600">
+                  We're taking a bit longer than usual to ensure accuracy. Thank
+                  you for your patience!
+                </p>
+              )}
+            </div>
+          ) : (
+            renderStep()
+          )}
+        </CardContent>
         <CardFooter className="flex justify-between">
-          <Button
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-            variant="outline"
-          >
-            Previous
-          </Button>
-          {currentStep < steps.length - 1 ? (
-            <Button onClick={handleNext}>Next</Button>
-          ) : isLoading ? (
-            <Button variant="default" disabled>
-              Calculating...
+          {isLoading ? (
+            <Button disabled variant="outline" className="w-full">
+              {isFinalizingDetails ? "Finalizing..." : "Calculating..."}
             </Button>
           ) : (
-            <Button onClick={handleSubmit} variant="default">
-              Calculate
-            </Button>
+            <>
+              <Button
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                variant="outline"
+              >
+                Previous
+              </Button>
+              {currentStep < steps.length - 1 ? (
+                <Button onClick={handleNext}>Next</Button>
+              ) : (
+                <Button onClick={handleSubmit} variant="default">
+                  Calculate
+                </Button>
+              )}
+            </>
           )}
         </CardFooter>
       </Card>
