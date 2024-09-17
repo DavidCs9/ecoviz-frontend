@@ -154,6 +154,7 @@ export function Calculator() {
             },
           },
           aiAnalysis: result.aiAnalysis,
+          averages: result.averages,
         },
       });
     } catch (error) {
