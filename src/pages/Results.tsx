@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
@@ -17,48 +16,8 @@ import {
 } from "recharts";
 import { Leaf, Car, Zap, Coffee, ShoppingBag } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { PersistedData, useDataPersistence } from "../hooks/useDataPersistence";
-import { useLocation, useNavigate } from "react-router-dom";
-
-export interface ResultsProps {
-  carbonFootprint: number;
-  calculationData: {
-    housing: {
-      energy: {
-        electricity: number;
-        naturalGas: number;
-        heatingOil: number;
-      };
-    };
-    transportation: {
-      car: {
-        milesDriven: number;
-        fuelEfficiency: number;
-      };
-      publicTransit: {
-        busMiles: number;
-        trainMiles: number;
-      };
-      flights: {
-        shortHaul: number;
-        longHaul: number;
-      };
-    };
-    food: {
-      dietType: string;
-      wasteLevel: string;
-    };
-    consumption: {
-      shoppingHabits: string;
-      recyclingHabits: string;
-    };
-  };
-  aiAnalysis: string;
-  averages: {
-    global: number;
-    us: number;
-  };
-}
+import { useNavigate } from "react-router-dom";
+import { PersistedData } from "../hooks/useDataPersistence";
 
 const RADIAN = Math.PI / 180;
 
@@ -135,31 +94,36 @@ const renderActiveShape = (props: any) => {
 };
 
 const Results: React.FC = () => {
-  const { persistedData, saveData } = useDataPersistence();
   const navigate = useNavigate();
-  const location = useLocation();
+  const [resultData, setResultData] = useState<PersistedData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const animatedNumber = useSpring({
+    number: resultData?.carbonFootprint || 0,
+    from: { number: 0 },
+  });
 
   useEffect(() => {
-    if (location.state) {
-      saveData(location.state as PersistedData);
-    } else if (!persistedData) {
-      navigate("/"); // Redirect to home if no data is available
+    const storedData = localStorage.getItem("resultsData");
+    if (storedData) {
+      setResultData(JSON.parse(storedData));
+    } else {
+      console.log("No data available, redirecting");
+      navigate("/");
     }
-  }, [location.state, persistedData, saveData, navigate]);
+    setLoading(false);
+  }, [navigate]);
 
-  const resultData = persistedData || (location.state as PersistedData);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!resultData) {
-    return <div>Loading...</div>; // Or some other loading state
+    return <div>No data available</div>;
   }
 
   const { carbonFootprint, calculationData, aiAnalysis, averages } = resultData;
-
-  const animatedNumber = useSpring({
-    number: carbonFootprint,
-    from: { number: 0 },
-  });
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
