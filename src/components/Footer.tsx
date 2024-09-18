@@ -9,26 +9,7 @@ const Footer = () => {
             <Leaf className="mr-2" />
             <span className="text-lg font-semibold">EcoViz</span>
           </a>
-          <nav className="flex space-x-4 mb-4 md:mb-0">
-            <a
-              href="/"
-              className="hover:text-green-200 transition-colors duration-300"
-            >
-              Home
-            </a>
-            <a
-              href="/how-it-works"
-              className="hover:text-green-200 transition-colors duration-300"
-            >
-              How It Works
-            </a>
-            <a
-              href="/about"
-              className="hover:text-green-200 transition-colors duration-300"
-            >
-              About EcoViz
-            </a>
-          </nav>
+
           <div className="flex space-x-4">
             <a
               href="https://github.com/DavidCs9"
