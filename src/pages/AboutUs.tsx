@@ -23,10 +23,10 @@ const TechItem: React.FC<TechItemProps> = ({
   description,
 }) => (
   <div className="flex items-start space-x-3 p-4 bg-white bg-opacity-10 rounded-lg">
-    <Icon className="flex-shrink-0 h-6 w-6 text-green-400" />
+    <Icon className="flex-shrink-0 h-6 w-6 text-green-300" />
     <div>
       <h3 className="text-lg font-semibold text-white">{title}</h3>
-      <p className="mt-1 text-sm text-gray-200">{description}</p>
+      <p className="mt-1 text-sm text-gray-50">{description}</p>
     </div>
   </div>
 );
@@ -86,13 +86,13 @@ const AboutEcoViz = () => {
           <h2 className="text-2xl font-semibold text-blue-100 mb-4">
             Our Mission
           </h2>
-          <p className="text-gray-100 mb-4">
+          <p className="text-white mb-4">
             EcoViz was born from a passion for environmental sustainability and
             the belief that individual actions can make a significant impact.
             Our mission is to empower people with the knowledge and tools they
             need to understand and reduce their carbon footprint.
           </p>
-          <p className="text-gray-100">
+          <p className="text-white">
             By providing an easy-to-use calculator, intuitive visualizations,
             and AI-powered recommendations, we aim to make environmental
             consciousness accessible and actionable for everyone.
@@ -103,7 +103,7 @@ const AboutEcoViz = () => {
           <h2 className="text-2xl font-semibold text-green-200 mb-4">
             Why We Built It
           </h2>
-          <ul className="list-disc list-inside text-gray-200 space-y-2">
+          <ul className="list-disc list-inside text-white space-y-2">
             <li>To raise awareness about individual carbon footprints</li>
             <li>
               To provide actionable insights for reducing environmental impact

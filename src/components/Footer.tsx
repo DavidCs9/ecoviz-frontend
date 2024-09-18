@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className=" text-white py-6">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="flex text-sm md:text-base flex-row justify-between items-center">
           <a href="/" className="flex items-center mb-4 md:mb-0">
             <Leaf className="mr-2" />
             <span className="text-lg font-semibold">EcoViz</span>
