@@ -187,164 +187,155 @@ const Results: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full p-6">
-      <div className="max-w-4xl mx-auto bg-gradient-to-br from-green-100 to-blue-100 p-6 rounded-lg shadow-lg overflow-hidden text-gray-600">
-        <div className="p-8">
-          <h1 className="text-4xl font-bold text-center mb-8 text-green-800">
-            Your Carbon Footprint Results
-          </h1>
+      <div className="md:max-w-4xl mx-auto bg-gradient-to-br from-green-100 to-blue-100 p-6 md:p-10 rounded-lg shadow-lg overflow-hidden text-gray-600">
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-green-800">
+          Your Carbon Footprint Results
+        </h1>
 
-          <div className="flex justify-center items-center mb-8">
-            <Leaf className="w-16 h-16 text-green-500 mr-4" />
-            <animated.span className="text-6xl font-bold text-green-700">
-              {animatedNumber.number.to((n) => n.toFixed(2))}
-            </animated.span>
-            <span className="text-2xl ml-2">kg CO2e / year</span>
-          </div>
+        <div className="flex flex-col md:flex-row justify-center items-center mb-8">
+          <Leaf className="w-16 h-16 text-green-500 mr-4" />
+          <animated.span className="text-4xl md:text-6xl font-bold text-green-700">
+            {animatedNumber.number.to((n) => n.toFixed(2))}
+          </animated.span>
+          <span className="text-2xl ml-2">kg CO2e / year</span>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 text-green-700">
-                Breakdown
-              </h2>
-              <ResponsiveContainer height={300}>
-                <PieChart>
-                  <Pie
-                    activeIndex={activeIndex}
-                    activeShape={renderActiveShape}
-                    data={data}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    onMouseEnter={onPieEnter}
-                  >
-                    {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 text-green-700">
-                Details
-              </h2>
-              <ul className="space-y-4">
-                {data.map((item, index) => (
-                  <li key={index} className="flex items-center">
-                    <item.icon
-                      className="w-8 h-8 mr-4"
-                      style={{ color: item.color }}
-                    />
-                    <span className="text-lg">
-                      {item.name}: {item.value.toFixed(1)} kg CO2e
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="hidden md:block">
             <h2 className="text-2xl font-semibold mb-4 text-green-700">
-              Comparison with Averages
+              Breakdown
             </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={comparisonData}>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" />
-              </BarChart>
+            <ResponsiveContainer height={300}>
+              <PieChart>
+                <Pie
+                  activeIndex={activeIndex}
+                  activeShape={renderActiveShape}
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                  onMouseEnter={onPieEnter}
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+              </PieChart>
             </ResponsiveContainer>
-            <div className="mt-4 text-center">
-              <p className="text-lg">
-                Your carbon footprint is{" "}
-                <strong className="text-green-700">
-                  {((carbonFootprint / averages.global - 1) * 100).toFixed(1)}%
-                </strong>{" "}
-                {carbonFootprint > averages.global ? "higher" : "lower"} than
-                the global average and{" "}
-                <strong className="text-green-700">
-                  {((carbonFootprint / averages.us - 1) * 100).toFixed(1)}%
-                </strong>{" "}
-                {carbonFootprint > averages.us ? "higher" : "lower"} than the US
-                average.
-              </p>
-            </div>
           </div>
-
-          <div className="mb-8">
+          <div>
             <h2 className="text-2xl font-semibold mb-4 text-green-700">
-              AI Recommendations
+              Details
             </h2>
-            <div className="bg-green-50 p-6 rounded-lg shadow-inner">
-              <ReactMarkdown
-                components={{
-                  h1: ({ node, ...props }) => (
-                    <h3
-                      className="text-xl font-semibold mb-2 text-green-800"
-                      {...props}
-                    />
-                  ),
-                  h2: ({ node, ...props }) => (
-                    <h4
-                      className="text-lg font-semibold mb-2 text-green-700"
-                      {...props}
-                    />
-                  ),
-                  p: ({ node, ...props }) => (
-                    <p className="mb-4 text-green-900" {...props} />
-                  ),
-                  ul: ({ node, ...props }) => (
-                    <ul
-                      className="list-disc list-inside mb-4 text-green-900"
-                      {...props}
-                    />
-                  ),
-                  ol: ({ node, ...props }) => (
-                    <ol
-                      className="list-decimal list-inside mb-4 text-green-900"
-                      {...props}
-                    />
-                  ),
-                  li: ({ node, ...props }) => (
-                    <li className="mb-2" {...props} />
-                  ),
-                  strong: ({ node, ...props }) => (
-                    <strong
-                      className="font-semibold text-green-800"
-                      {...props}
-                    />
-                  ),
-                  em: ({ node, ...props }) => (
-                    <em className="italic text-green-700" {...props} />
-                  ),
-                  blockquote: ({ node, ...props }) => (
-                    <blockquote
-                      className="border-l-4 border-green-500 pl-4 italic my-4 text-green-800"
-                      {...props}
-                    />
-                  ),
-                }}
-              >
-                {aiAnalysis}
-              </ReactMarkdown>
-            </div>
+            <ul className="space-y-4">
+              {data.map((item, index) => (
+                <li key={index} className="flex items-center">
+                  <item.icon
+                    className="w-8 h-8 mr-4"
+                    style={{ color: item.color }}
+                  />
+                  <span className="text-lg">
+                    {item.name}: {item.value.toFixed(1)} kg CO2e
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
 
-          <div className="text-center text-sm text-gray-600 mt-8">
-            <p>
-              These recommendations are generated by AI and should be considered
-              as general advice.
-            </p>
-            <p>
-              Always consult with environmental experts for personalized
-              strategies.
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-green-700">
+            Comparison with Averages
+          </h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={comparisonData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" />
+            </BarChart>
+          </ResponsiveContainer>
+          <div className="mt-4 text-center">
+            <p className="text-lg">
+              Your carbon footprint is{" "}
+              <strong className="text-green-700">
+                {((carbonFootprint / averages.global - 1) * 100).toFixed(1)}%
+              </strong>{" "}
+              {carbonFootprint > averages.global ? "higher" : "lower"} than the
+              global average and{" "}
+              <strong className="text-green-700">
+                {((carbonFootprint / averages.us - 1) * 100).toFixed(1)}%
+              </strong>{" "}
+              {carbonFootprint > averages.us ? "higher" : "lower"} than the US
+              average.
             </p>
           </div>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-green-700">
+            AI Recommendations
+          </h2>
+          <ReactMarkdown
+            components={{
+              h1: ({ node, ...props }) => (
+                <h3
+                  className="text-xl font-semibold mb-2 text-green-800"
+                  {...props}
+                />
+              ),
+              h2: ({ node, ...props }) => (
+                <h4
+                  className="text-lg font-semibold mb-2 text-green-700"
+                  {...props}
+                />
+              ),
+              p: ({ node, ...props }) => (
+                <p className="mb-4 text-green-900" {...props} />
+              ),
+              ul: ({ node, ...props }) => (
+                <ul
+                  className="list-disc list-inside mb-4 text-green-900"
+                  {...props}
+                />
+              ),
+              ol: ({ node, ...props }) => (
+                <ol
+                  className="list-decimal list-inside mb-4 text-green-900"
+                  {...props}
+                />
+              ),
+              li: ({ node, ...props }) => <li className="mb-2" {...props} />,
+              strong: ({ node, ...props }) => (
+                <strong className="font-semibold text-green-800" {...props} />
+              ),
+              em: ({ node, ...props }) => (
+                <em className="italic text-green-700" {...props} />
+              ),
+              blockquote: ({ node, ...props }) => (
+                <blockquote
+                  className="border-l-4 border-green-500 pl-4 italic my-4 text-green-800"
+                  {...props}
+                />
+              ),
+            }}
+          >
+            {aiAnalysis}
+          </ReactMarkdown>
+        </div>
+
+        <div className="text-center text-sm text-gray-600 mt-8 bg-gray-100/80 p-2 rounded-lg">
+          <p>
+            These recommendations are generated by <strong>AI</strong> and
+            should be considered as general advice.
+          </p>
+          <p>
+            Always consult with environmental experts for personalized
+            strategies.
+          </p>
         </div>
       </div>
     </div>
