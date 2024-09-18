@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import { Calculator } from "./pages/Calculator";
 import Results from "./pages/Results";
+import AboutEcoViz from "./pages/AboutUs";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/calculator" element={<Calculator />} />
             <Route path="/results" element={<Results />} />
+            <Route path="/about" element={<AboutEcoViz />} />
           </Routes>
         </Layout>
       </Router>

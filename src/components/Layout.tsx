@@ -1,5 +1,6 @@
 import React from "react";
 import { Toaster } from "./ui/toaster";
+import Footer from "./Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -34,6 +35,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </nav> */}
       <main>{children}</main>
+      <Footer />
       <Toaster />
     </div>
   );

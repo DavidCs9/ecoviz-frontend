@@ -3,7 +3,7 @@ import { Leaf, Calculator, BarChart, Lightbulb } from "lucide-react";
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center p-6">
+    <div className="min-h-screen  flex items-center justify-center p-6">
       <div className="text-center max-w-4xl">
         <h1 className="text-6xl font-bold text-white mb-4 drop-shadow-lg">
           EcoViz
