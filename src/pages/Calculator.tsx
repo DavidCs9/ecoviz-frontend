@@ -279,13 +279,16 @@ export function Calculator() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="householdSize">Household Size</Label>
+                <Label htmlFor="householdSize">
+                  Household Size (number of people)
+                </Label>
                 <Input
                   type="number"
                   id="householdSize"
                   name="householdSize"
                   value={formData.householdSize}
                   onChange={handleInputChange}
+                  placeholder="e.g., 2 for a couple, 4 for a family"
                 />
               </div>
               <div>
@@ -298,7 +301,12 @@ export function Calculator() {
                   name="electricity"
                   value={formData.electricity}
                   onChange={handleInputChange}
+                  placeholder="Average US household: 10,649 kWh/year"
                 />
+                <p className="text-sm text-gray-500 mt-1">
+                  Tip: Check your utility bills for monthly usage and multiply
+                  by 12
+                </p>
               </div>
               <div>
                 <Label htmlFor="naturalGas">
@@ -310,7 +318,11 @@ export function Calculator() {
                   name="naturalGas"
                   value={formData.naturalGas}
                   onChange={handleInputChange}
+                  placeholder="Average US household: 567 therms/year"
                 />
+                <p className="text-sm text-gray-500 mt-1">
+                  Tip: 1 therm ≈ 100 cubic feet of natural gas
+                </p>
               </div>
               <div>
                 <Label htmlFor="heatingOil">
@@ -322,6 +334,7 @@ export function Calculator() {
                   name="heatingOil"
                   value={formData.heatingOil}
                   onChange={handleInputChange}
+                  placeholder="Average usage: 540 gallons/year (if applicable)"
                 />
               </div>
             </div>
@@ -339,6 +352,7 @@ export function Calculator() {
                   name="milesDriven"
                   value={formData.milesDriven}
                   onChange={handleInputChange}
+                  placeholder="Average US driver: 13,500 miles/year"
                 />
               </div>
               <div>
@@ -351,6 +365,7 @@ export function Calculator() {
                   name="fuelEfficiency"
                   value={formData.fuelEfficiency}
                   onChange={handleInputChange}
+                  placeholder="Average new car: 25.7 mpg"
                 />
               </div>
               <div>
@@ -361,6 +376,7 @@ export function Calculator() {
                   name="busMiles"
                   value={formData.busMiles}
                   onChange={handleInputChange}
+                  placeholder="If you commute by bus, estimate your daily miles × 250 workdays"
                 />
               </div>
               <div>
@@ -371,11 +387,12 @@ export function Calculator() {
                   name="trainMiles"
                   value={formData.trainMiles}
                   onChange={handleInputChange}
+                  placeholder="If you commute by train, estimate your daily miles × 250 workdays"
                 />
               </div>
               <div>
                 <Label htmlFor="shortHaulFlights">
-                  Number of Short Haul Flights per Year
+                  Number of Short Haul Flights per Year (under 3 hours)
                 </Label>
                 <Input
                   type="number"
@@ -383,11 +400,12 @@ export function Calculator() {
                   name="shortHaulFlights"
                   value={formData.shortHaulFlights}
                   onChange={handleInputChange}
+                  placeholder="e.g., 4 for two round trips"
                 />
               </div>
               <div>
                 <Label htmlFor="longHaulFlights">
-                  Number of Long Haul Flights per Year
+                  Number of Long Haul Flights per Year (over 3 hours)
                 </Label>
                 <Input
                   type="number"
@@ -395,6 +413,7 @@ export function Calculator() {
                   name="longHaulFlights"
                   value={formData.longHaulFlights}
                   onChange={handleInputChange}
+                  placeholder="e.g., 2 for one round trip"
                 />
               </div>
             </div>
@@ -412,19 +431,25 @@ export function Calculator() {
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="meat-heavy" id="meat-heavy" />
-                    <Label htmlFor="meat-heavy">Meat Heavy</Label>
+                    <Label htmlFor="meat-heavy">
+                      Meat Heavy (meat at almost every meal)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="average" id="average" />
-                    <Label htmlFor="average">Average</Label>
+                    <Label htmlFor="average">
+                      Average (meat a few times a week)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="vegetarian" id="vegetarian" />
-                    <Label htmlFor="vegetarian">Vegetarian</Label>
+                    <Label htmlFor="vegetarian">
+                      Vegetarian (no meat, but consume dairy/eggs)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="vegan" id="vegan" />
-                    <Label htmlFor="vegan">Vegan</Label>
+                    <Label htmlFor="vegan">Vegan (no animal products)</Label>
                   </div>
                 </RadioGroup>
               </div>
@@ -436,15 +461,19 @@ export function Calculator() {
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="low" id="low" />
-                    <Label htmlFor="low">Low</Label>
+                    <Label htmlFor="low">Low (rarely throw away food)</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="average" id="average" />
-                    <Label htmlFor="average">Average</Label>
+                    <Label htmlFor="average">
+                      Average (sometimes throw away leftovers)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="high" id="high" />
-                    <Label htmlFor="high">High</Label>
+                    <Label htmlFor="high">
+                      High (often throw away expired or uneaten food)
+                    </Label>
                   </div>
                 </RadioGroup>
               </div>
@@ -463,15 +492,21 @@ export function Calculator() {
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="minimal" id="minimal" />
-                    <Label htmlFor="minimal">Minimal</Label>
+                    <Label htmlFor="minimal">
+                      Minimal (buy only necessities)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="average" id="average" />
-                    <Label htmlFor="average">Average</Label>
+                    <Label htmlFor="average">
+                      Average (occasional non-essential purchases)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="frequent" id="frequent" />
-                    <Label htmlFor="frequent">Frequent</Label>
+                    <Label htmlFor="frequent">
+                      Frequent (regular non-essential shopping)
+                    </Label>
                   </div>
                 </RadioGroup>
               </div>
@@ -483,19 +518,23 @@ export function Calculator() {
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="none" id="none" />
-                    <Label htmlFor="none">None</Label>
+                    <Label htmlFor="none">None (don't recycle)</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="some" id="some" />
-                    <Label htmlFor="some">Some</Label>
+                    <Label htmlFor="some">Some (recycle when convenient)</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="most" id="most" />
-                    <Label htmlFor="most">Most</Label>
+                    <Label htmlFor="most">
+                      Most (regularly recycle common items)
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="all" id="all" />
-                    <Label htmlFor="all">All</Label>
+                    <Label htmlFor="all">
+                      All (diligently recycle everything possible)
+                    </Label>
                   </div>
                 </RadioGroup>
               </div>
