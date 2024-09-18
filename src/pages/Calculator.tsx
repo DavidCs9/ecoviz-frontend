@@ -62,6 +62,11 @@ export function Calculator() {
     recyclingHabits: "",
   });
 
+  // Add this new function to clear localStorage
+  const clearStoredResults = () => {
+    localStorage.removeItem("resultsData");
+  };
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -80,6 +85,7 @@ export function Calculator() {
   };
 
   useEffect(() => {
+    clearStoredResults();
     let progressInterval: NodeJS.Timeout | undefined;
     let factInterval: NodeJS.Timeout | undefined;
 
@@ -114,6 +120,7 @@ export function Calculator() {
   }, [isLoading]);
 
   const handleSubmit = async () => {
+    clearStoredResults(); // Clear localStorage before starting new calculation
     setIsLoading(true);
     setLoadingProgress(0);
     const API_URL = "https://0123543.xyz/calculate";
@@ -167,46 +174,50 @@ export function Calculator() {
       }
 
       const result = await response.json();
-      navigate("/results", {
-        state: {
-          carbonFootprint: result.carbonFootprint,
-          calculationData: {
-            housing: {
-              type: formData.housingType,
-              size: parseInt(formData.householdSize),
-              energy: {
-                electricity: parseFloat(formData.electricity),
-                naturalGas: parseFloat(formData.naturalGas),
-                heatingOil: parseFloat(formData.heatingOil),
-              },
-            },
-            transportation: {
-              car: {
-                milesDriven: parseFloat(formData.milesDriven),
-                fuelEfficiency: parseFloat(formData.fuelEfficiency),
-              },
-              publicTransit: {
-                busMiles: parseFloat(formData.busMiles),
-                trainMiles: parseFloat(formData.trainMiles),
-              },
-              flights: {
-                shortHaul: parseInt(formData.shortHaulFlights),
-                longHaul: parseInt(formData.longHaulFlights),
-              },
-            },
-            food: {
-              dietType: formData.dietType,
-              wasteLevel: formData.foodWaste,
-            },
-            consumption: {
-              shoppingHabits: formData.shoppingHabits,
-              recyclingHabits: formData.recyclingHabits,
+
+      const resultsData = {
+        carbonFootprint: result.carbonFootprint,
+        calculationData: {
+          housing: {
+            type: formData.housingType,
+            size: parseInt(formData.householdSize),
+            energy: {
+              electricity: parseFloat(formData.electricity),
+              naturalGas: parseFloat(formData.naturalGas),
+              heatingOil: parseFloat(formData.heatingOil),
             },
           },
-          aiAnalysis: result.aiAnalysis,
-          averages: result.averages,
+          transportation: {
+            car: {
+              milesDriven: parseFloat(formData.milesDriven),
+              fuelEfficiency: parseFloat(formData.fuelEfficiency),
+            },
+            publicTransit: {
+              busMiles: parseFloat(formData.busMiles),
+              trainMiles: parseFloat(formData.trainMiles),
+            },
+            flights: {
+              shortHaul: parseInt(formData.shortHaulFlights),
+              longHaul: parseInt(formData.longHaulFlights),
+            },
+          },
+          food: {
+            dietType: formData.dietType,
+            wasteLevel: formData.foodWaste,
+          },
+          consumption: {
+            shoppingHabits: formData.shoppingHabits,
+            recyclingHabits: formData.recyclingHabits,
+          },
         },
-      });
+        aiAnalysis: result.aiAnalysis,
+        averages: result.averages,
+      };
+
+      // Save to localStorage
+      localStorage.setItem("resultsData", JSON.stringify(resultsData));
+
+      navigate("/results");
     } catch (error) {
       console.error("Error:", error);
       toast({
