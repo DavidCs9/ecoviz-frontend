@@ -22,6 +22,7 @@ import {
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { Progress } from "../components/ui/progress";
+import posthog from "posthog-js";
 
 const steps = ["Housing", "Transportation", "Food", "Consumption"];
 
@@ -70,21 +71,39 @@ export function Calculator() {
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    // Track when user inputs data
+    posthog.capture("calculator_input_changed", { field: name, value });
   };
 
   const handleSelectChange = (name: any) => (value: any) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    // Track when user selects an option
+    posthog.capture("calculator_select_changed", { field: name, value });
   };
 
   const handleNext = () => {
-    setCurrentStep((prevStep) => prevStep + 1);
+    setCurrentStep((prevStep) => {
+      const nextStep = prevStep + 1;
+      // Track when user moves to next step
+      posthog.capture("calculator_next_step", { from: prevStep, to: nextStep });
+      return nextStep;
+    });
   };
 
   const handlePrevious = () => {
-    setCurrentStep((prevStep) => prevStep - 1);
+    setCurrentStep((prevStep) => {
+      const nextStep = prevStep - 1;
+      // Track when user moves to previous step
+      posthog.capture("calculator_previous_step", {
+        from: prevStep,
+        to: nextStep,
+      });
+      return nextStep;
+    });
   };
 
   useEffect(() => {
+    posthog.capture("calculator_started");
     clearStoredResults();
     let progressInterval: NodeJS.Timeout | undefined;
     let factInterval: NodeJS.Timeout | undefined;
@@ -114,12 +133,14 @@ export function Calculator() {
     }
 
     return () => {
+      posthog.capture("calculator_abandoned");
       if (progressInterval) clearInterval(progressInterval);
       if (factInterval) clearInterval(factInterval);
     };
   }, [isLoading]);
 
   const handleSubmit = async () => {
+    posthog.capture("calculator_submitted", { formData });
     clearStoredResults(); // Clear localStorage before starting new calculation
     setIsLoading(true);
     setLoadingProgress(0);
@@ -216,10 +237,14 @@ export function Calculator() {
 
       // Save to localStorage
       localStorage.setItem("resultsData", JSON.stringify(resultsData));
+      posthog.capture("calculator_result_received", {
+        carbonFootprint: result.carbonFootprint,
+      });
 
       navigate("/results");
     } catch (error) {
       console.error("Error:", error);
+      posthog.capture("calculator_error", { error: String(error) });
       toast({
         title: "Calculation Failed",
         description: "Failed to calculate carbon footprint. Please try again.",
