@@ -101,7 +101,7 @@ export function Calculator() {
             setIsFinalizingDetails(true);
             return 100;
           }
-          return oldProgress + 1; // Increases by 1% every 100ms
+          return oldProgress + 0.5; // Increases by 0.5% every 100ms
         });
       }, 100);
 
