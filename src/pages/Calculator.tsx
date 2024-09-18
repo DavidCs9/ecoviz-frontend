@@ -23,6 +23,7 @@ import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { Progress } from "../components/ui/progress";
 import posthog from "posthog-js";
+import { v4 as uuidv4 } from "uuid";
 
 const steps = ["Housing", "Transportation", "Food", "Consumption"];
 
@@ -104,6 +105,17 @@ export function Calculator() {
 
   useEffect(() => {
     posthog.capture("calculator_started");
+    // Check if user has an ID in localStorage
+    let userId = localStorage.getItem("ecoviz_user_id");
+    // If not, generate a new UUID and store it
+    if (!userId) {
+      userId = uuidv4();
+      localStorage.setItem("ecoviz_user_id", userId);
+    }
+
+    // Identify the user in PostHog
+    posthog.identify(userId);
+
     clearStoredResults();
     let progressInterval: NodeJS.Timeout | undefined;
     let factInterval: NodeJS.Timeout | undefined;
@@ -147,13 +159,14 @@ export function Calculator() {
     const API_URL = "https://0123543.xyz/calculate";
 
     try {
+      const userId = localStorage.getItem("ecoviz_user_id");
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: "testuser123", // In a real app, this should be dynamically generated or retrieved from user authentication
+          userId: userId, // In a real app, this should be dynamically generated or retrieved from user authentication
           data: {
             housing: {
               type: formData.housingType,
