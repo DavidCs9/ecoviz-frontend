@@ -18,6 +18,9 @@ import { Leaf, Car, Zap, Coffee, ShoppingBag } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import { PersistedData } from "../hooks/useDataPersistence";
+import EmailResultsButton, {
+  CarbonFootprintResults,
+} from "../components/EmailButton";
 
 const RADIAN = Math.PI / 180;
 
@@ -185,6 +188,14 @@ const Results: React.FC = () => {
     { name: "US Average", value: averages.us, fill: "#FFC107" },
   ];
 
+  const emailData: CarbonFootprintResults = {
+    carbonFootprint,
+    housing: sectorEmissions.housing,
+    transportation: sectorEmissions.transportation,
+    food: sectorEmissions.foodEmissions,
+    consumption: sectorEmissions.consumptionEmissions,
+  };
+
   return (
     <div className="min-h-screen w-full p-6">
       <div className="md:max-w-4xl mx-auto bg-gradient-to-br from-green-100 to-blue-100 p-6 md:p-10 rounded-lg shadow-lg overflow-hidden text-gray-600">
@@ -326,6 +337,8 @@ const Results: React.FC = () => {
             {aiAnalysis}
           </ReactMarkdown>
         </div>
+
+        <EmailResultsButton results={emailData} />
 
         <div className="text-center text-sm text-gray-600 mt-8 bg-gray-100/80 p-2 rounded-lg">
           <p>
