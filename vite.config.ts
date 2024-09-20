@@ -1,15 +1,11 @@
-import { sentryVitePlugin } from "@sentry/vite-plugin";
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), sentryVitePlugin({
-    org: "david-eduardo-castro-siqueiros",
-    project: "ecoviz"
-  })],
-
-  build: {
-    sourcemap: true
-  }
-})
+  plugins: [
+    react({
+      jsxRuntime: "automatic",
+    }),
+  ],
+});
